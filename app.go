@@ -2,23 +2,39 @@ package main
 
 import (
 	"fmt"
+	"io/ioutil"
 	"log"
 	"net/http"
 	"net/smtp"
+	"os"
 )
 
 func homePage(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Hello, World!")
 }
 
-func email(w http.ResponseWriter, r *http.Request) {
-	auth := smtp.PlainAuth("", "email", "pass", "smtp.gmail.com")
+// type EmailBody struct {
+// 	toEmail string `json:"toEmail"`
+// 	msg     string `json:"msg"`
+// 	from    string `json:"from"`
+// }
 
-	// Here we do it all: connect to our server, set up a message and send it
-	to := []string{""}
+func email(w http.ResponseWriter, r *http.Request) {
+	// Getting request body
+	body, readErr := ioutil.ReadAll(r.Body)
+	if readErr != nil {
+		log.Printf("Error reading body: %v", readErr)
+		http.Error(w, "can't read body", http.StatusBadRequest)
+		return
+	}
+	fmt.Println(string(body))
+
+	// Sending email
+	auth := smtp.PlainAuth("", os.Getenv("EMAIL"), os.Getenv("EMAIL_PASS"), "smtp.gmail.com")
+	to := []string{"geomin76@gmail.com"}
 	msg := []byte("Hello, World!")
 
-	err := smtp.SendMail("smtp.gmail.com:587", auth, "from", to, msg)
+	err := smtp.SendMail("smtp.gmail.com:587", auth, os.Getenv("EMAIL"), to, msg)
 	if err != nil {
 		log.Fatal(err)
 	}
