@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
@@ -13,26 +14,29 @@ func homePage(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Hello, World!")
 }
 
-// type EmailBody struct {
-// 	toEmail string `json:"toEmail"`
-// 	msg     string `json:"msg"`
-// 	from    string `json:"from"`
-// }
+type Email struct {
+	ToEmail string
+	Msg     string
+	From    string
+}
 
 func email(w http.ResponseWriter, r *http.Request) {
 	// Getting request body
+	var email Email
+
 	body, readErr := ioutil.ReadAll(r.Body)
 	if readErr != nil {
 		log.Printf("Error reading body: %v", readErr)
 		http.Error(w, "can't read body", http.StatusBadRequest)
 		return
 	}
-	fmt.Println(string(body))
+
+	json.Unmarshal([]byte(string(body)), &email)
 
 	// Sending email
 	auth := smtp.PlainAuth("", os.Getenv("EMAIL"), os.Getenv("EMAIL_PASS"), "smtp.gmail.com")
-	to := []string{"geomin76@gmail.com"}
-	msg := []byte("Hello, World!")
+	to := []string{string(email.ToEmail)}
+	msg := []byte(string(email.Msg))
 
 	err := smtp.SendMail("smtp.gmail.com:587", auth, os.Getenv("EMAIL"), to, msg)
 	if err != nil {
