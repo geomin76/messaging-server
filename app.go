@@ -17,6 +17,7 @@ func homePage(w http.ResponseWriter, r *http.Request) {
 type Email struct {
 	ToEmail string
 	Msg     string
+	Subject string
 	From    string
 }
 
@@ -31,12 +32,17 @@ func email(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// Parsing request.body to Email Struct
 	json.Unmarshal([]byte(string(body)), &email)
 
 	// Sending email
 	auth := smtp.PlainAuth("", os.Getenv("EMAIL"), os.Getenv("EMAIL_PASS"), "smtp.gmail.com")
 	to := []string{string(email.ToEmail)}
-	msg := []byte(string(email.Msg))
+	msg := []byte("To: " + string(email.ToEmail) + "\r\n" +
+		"Subject: " + string(email.Subject) + "\r\n" +
+		"\r\n" +
+		"From: " + string(email.From) + "\r\n\n" +
+		"Message: " + string(email.Msg) + "\r\n")
 
 	err := smtp.SendMail("smtp.gmail.com:587", auth, os.Getenv("EMAIL"), to, msg)
 	if err != nil {
