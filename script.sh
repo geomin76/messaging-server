@@ -12,4 +12,4 @@ GOOS=linux go build -o app app.go
 
 zip function.zip app
 
-aws lambda create-function --function-name messaging-server --runtime go1.x --zip-file fileb://function.zip --region us-east-1 --handler main --role arn:aws:iam::909857398854:user/messaging-server
+aws lambda create-function --function-name messaging-server --runtime go1.x --zip-file fileb://function.zip --region us-east-1 --handler main --role arn:aws:iam::909857398854:role/messaging-server
