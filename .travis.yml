@@ -11,4 +11,4 @@ install:
   - go get github.com/aws/aws-lambda-go/lambda
 
 script:
-  - 
+  - ./script.sh
