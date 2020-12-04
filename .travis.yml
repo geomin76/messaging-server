@@ -11,4 +11,5 @@ install:
   - go get github.com/aws/aws-lambda-go/lambda
 
 script:
+  - chmod 700 script.sh
   - ./script.sh
