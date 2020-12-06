@@ -6,6 +6,7 @@ deploy:
   api_key:
     secure: W8wiwGh83QhvD388AE7oI52RvufHOQWAp4gwnjGDI22c/a53wCP1aL19GGrsjFjZqjp/dIWOPTKtOFFTAry7Z6B/x5UABwifb7zRveQWm77IYi8ANKpYcdKyipPMlAzvY8v11dx7SWESrrAGb2FRjbhXyaoZIZjY7qwnOokTy6evcxI7b+X/OYXDNh4FCJOSYpOBvGCDVOktLeAcyAza/aNQinZxhJcBRrF2AVEsIQLsh6si92Um8ULazIG201Oyi4HzKLAsZPRSpAZXNlZppEYKtlKltuNkXhGMd4dYLW6dLl9Cn7ntHCPu5FxHGmc7WJqqGXKjgtUSH3O7xX2DU3I3jkJnXc+i3S/MY9BjE/5dYXF77/8F5kiK7ftkBFH1Phq4BxpfNA8KV8xWW9MMz4sZEDqcXXKq2CnWIC7p/4CKClBQHZ3AOwvDaMLOYxcFQi6vgSmOEC/+neJA2hP+FYBHJNd3ZBG3n4Kbo0KIcweK+4VbPuqsnZFTAKe4kZcsN6favxAix3c5V+uJnbT96CRR9UZ4G/boagXCSkTmAkeOt1VK6jVvMKvAxyCNOmgBZx0WX7sIXl7bDpWpYvp8oKmrs/Dd5mr2FDP4slWBGm5fuLVhoyfF/VarQ+dOQEoKIQ7cdIWJStVdfwFrnxckPTtrLLV6/YwQ5dHAVHZT/Zk=
   app: messaging-server4
+  edge: true
   on:
     branch: main
     repo: geomin76/messaging-server
