@@ -55,15 +55,11 @@ func text(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "Text sent")
 }
 
-func handleRequests() {
+func main() {
 	http.HandleFunc("/", homePage)
 	http.HandleFunc("/email", email)
 	http.HandleFunc("/text", text)
-	log.Fatal(http.ListenAndServe(":10000", nil))
-}
-
-func main() {
 	fmt.Println("Hello, World!")
-	fmt.Println("App is running at http://localhost:10000")
-	handleRequests()
+	fmt.Println("App is running at http://localhost:8080")
+	log.Fatal(http.ListenAndServe(":8080", nil))
 }
