@@ -11,7 +11,7 @@ import (
 )
 
 func homePage(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Access-Control-Allow-Origin", "*")
+	setupCorsResponse(&w, r)
 	fmt.Fprintf(w, "Hello, World!")
 }
 
@@ -22,8 +22,14 @@ type Email struct {
 	From    string
 }
 
+func setupCorsResponse(w *http.ResponseWriter, req *http.Request) {
+	(*w).Header().Set("Access-Control-Allow-Origin", "*")
+	(*w).Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+	(*w).Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Authorization")
+}
+
 func email(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Access-Control-Allow-Origin", "*")
+	setupCorsResponse(&w, r)
 	// Getting request body
 	var email Email
 
@@ -54,6 +60,7 @@ func email(w http.ResponseWriter, r *http.Request) {
 }
 
 func text(w http.ResponseWriter, r *http.Request) {
+	setupCorsResponse(&w, r)
 	fmt.Fprintf(w, "Text sent")
 }
 
