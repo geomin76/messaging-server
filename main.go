@@ -8,10 +8,12 @@ import (
 	"net/http"
 	"net/smtp"
 	"os"
+
+	"github.com/rs/cors"
 )
 
 func homePage(w http.ResponseWriter, r *http.Request) {
-	setupCorsResponse(&w, r)
+	// setupCorsResponse(&w, r)
 	fmt.Fprintf(w, "Hello, World!")
 }
 
@@ -22,14 +24,17 @@ type Email struct {
 	From    string
 }
 
-func setupCorsResponse(w *http.ResponseWriter, req *http.Request) {
-	(*w).Header().Set("Access-Control-Allow-Origin", "*")
-	(*w).Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
-	(*w).Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Authorization")
-}
+// func setupCorsResponse(w *http.ResponseWriter, req *http.Request) {
+// 	(*w).Header().Set("Access-Control-Allow-Origin", "*")
+// 	(*w).Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+// 	(*w).Header().Set("Access-Control-Allow-Headers", "Accept, Content-Type, Content-Length, Authorization")
+// }
 
 func email(w http.ResponseWriter, r *http.Request) {
-	setupCorsResponse(&w, r)
+	// setupCorsResponse(&w, r)
+	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type,access-control-allow-origin, access-control-allow-headers")
 	// Getting request body
 	var email Email
 
@@ -60,7 +65,7 @@ func email(w http.ResponseWriter, r *http.Request) {
 }
 
 func text(w http.ResponseWriter, r *http.Request) {
-	setupCorsResponse(&w, r)
+	// setupCorsResponse(&w, r)
 	fmt.Fprintf(w, "Text sent")
 }
 
@@ -77,11 +82,14 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	http.HandleFunc("/", homePage)
-	http.HandleFunc("/email", email)
-	http.HandleFunc("/text", text)
+	mux := http.NewServeMux()
+	mux.HandleFunc("/", homePage)
+	mux.HandleFunc("/email", email)
+	mux.HandleFunc("/text", text)
+
+	handler := cors.Default().Handler(mux)
 	log.Printf("Listening on %s...\n", addr)
-	if err := http.ListenAndServe(addr, nil); err != nil {
+	if err := http.ListenAndServe(addr, handler); err != nil {
 		panic(err)
 	}
 }
