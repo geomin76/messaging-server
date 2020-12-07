@@ -11,6 +11,7 @@ import (
 )
 
 func homePage(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	fmt.Fprintf(w, "Hello, World!")
 }
 
@@ -22,6 +23,7 @@ type Email struct {
 }
 
 func email(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Access-Control-Allow-Origin", "*")
 	// Getting request body
 	var email Email
 
@@ -68,7 +70,6 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-
 	http.HandleFunc("/", homePage)
 	http.HandleFunc("/email", email)
 	http.HandleFunc("/text", text)
