@@ -97,7 +97,7 @@ func text(w http.ResponseWriter, r *http.Request) {
 		"Message: " + string(text.Msg)
 	twilio.SendSMS(from, to, message, "", "")
 
-	fmt.Fprintf(w, "Text sent")
+	fmt.Fprintf(w, "Text sent with Twilio")
 }
 
 func determineListenAddress() (string, error) {
