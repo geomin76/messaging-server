@@ -10,6 +10,7 @@ import (
 	"os"
 
 	"github.com/rs/cors"
+	"github.com/sfreiberg/gotwilio"
 )
 
 func homePage(w http.ResponseWriter, r *http.Request) {
@@ -22,6 +23,11 @@ type Email struct {
 	Msg     string
 	Subject string
 	From    string
+}
+
+type Text struct {
+	From string
+	Msg  string
 }
 
 // func setupCorsResponse(w *http.ResponseWriter, req *http.Request) {
@@ -65,7 +71,31 @@ func email(w http.ResponseWriter, r *http.Request) {
 }
 
 func text(w http.ResponseWriter, r *http.Request) {
-	// setupCorsResponse(&w, r)
+	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type,access-control-allow-origin, access-control-allow-headers")
+	var text Text
+
+	body, readErr := ioutil.ReadAll(r.Body)
+	if readErr != nil {
+		log.Printf("Error reading body: %v", readErr)
+		http.Error(w, "can't read body", http.StatusBadRequest)
+		return
+	}
+
+	// Parsing request.body to Email Struct
+	json.Unmarshal([]byte(string(body)), &text)
+
+	accountSid := os.Getenv("PHONE_KEY")
+	authToken := os.Getenv("PHONE_SECRET")
+	twilio := gotwilio.NewTwilioClient(accountSid, authToken)
+
+	from := os.Getenv("TWILIO_NUMBER")
+	to := os.Getenv("MADISON_NUMBER")
+	message := "From: " + string(text.From) + "\r\n\n" +
+		"Message: " + string(text.Msg) + "\r\n"
+	twilio.SendSMS(from, to, message, "", "")
+
 	fmt.Fprintf(w, "Text sent")
 }
 
