@@ -87,11 +87,11 @@ func text(w http.ResponseWriter, r *http.Request) {
 	// Parsing request.body to Email Struct
 	json.Unmarshal([]byte(string(body)), &text)
 
-	accountSid := os.Getenv("PHONE_KEY")
-	authToken := os.Getenv("PHONE_SECRET")
+	accountSid := string(os.Getenv("PHONE_KEY"))
+	authToken := string(os.Getenv("PHONE_SECRET"))
 	twilio := gotwilio.NewTwilioClient(accountSid, authToken)
 
-	from := os.Getenv("TWILIO_NUMBER")
+	from := string(os.Getenv("TWILIO_NUMBER"))
 	to := string(text.To)
 	message := "From: " + string(text.From) + "\r\n\n" +
 		"Message: " + string(text.Msg)
