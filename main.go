@@ -28,6 +28,7 @@ type Email struct {
 type Text struct {
 	From string
 	Msg  string
+	To   string
 }
 
 // func setupCorsResponse(w *http.ResponseWriter, req *http.Request) {
@@ -91,9 +92,9 @@ func text(w http.ResponseWriter, r *http.Request) {
 	twilio := gotwilio.NewTwilioClient(accountSid, authToken)
 
 	from := os.Getenv("TWILIO_NUMBER")
-	to := os.Getenv("MADISON_NUMBER")
+	to := string(text.To)
 	message := "From: " + string(text.From) + "\r\n\n" +
-		"Message: " + string(text.Msg) + "\r\n"
+		"Message: " + string(text.Msg)
 	twilio.SendSMS(from, to, message, "", "")
 
 	fmt.Fprintf(w, "Text sent")
